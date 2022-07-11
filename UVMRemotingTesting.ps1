@@ -16,8 +16,7 @@ Set-Item wsman:localhost\client\trustedhosts -Value ak-test01.lab.com
 
 winrm set winrm/config/client '@{TrustedHosts="ak-test01.lab.com"}'
 
-get-Item wsman:localhost\client\trustedhosts
-clear-Item wsman:localhost\client\trustedhosts
+
 
 $cred = Get-Credential
 $cimses = New-CimSession -ComputerName ak-test01.lab.com -Credential $cred -Authentication Default
@@ -28,7 +27,7 @@ Get-NetFirewallRule -CimSession $cimses
 Get-NetFirewallRule -CimSession $cimses 
 Test-WSMan -ComputerName ak-uvm221.red.local
 
-Set-Item wsman:localhost\client\trustedhosts -Value ak-test01.lab.com
+
 
 $aktest01 = New-PSSession -ComputerName  ak-jira -UseSSL
 
@@ -55,3 +54,6 @@ $session = New-PSSession -computername ak-uvm221.red.local -Credential $cred
 Invoke-Command -ComputerName ak-uvm221.red.local -SessionName 
 
 Start-Service | Get-Member
+
+Invoke-WSManAction -Action startservice -ResourceURI \\wmi\cimv2\win32_service -SelectorSet @{name="spooler"}  -Authentication default
+Invoke-WSManAction -Action startservice -ResourceURI wmicimv2/win32_service -SelectorSet @{name="server"} -ComputerName 10.200.114.67 -Authentication default

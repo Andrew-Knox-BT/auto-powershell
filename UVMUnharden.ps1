@@ -1,37 +1,29 @@
 #Main file to run against a UVM to unharden the firewall and start needed services to allow outside access into the UVM for copying files and running tests 
 
-#Test WSMan connection on remote computer
-Test-WSMan -ComputerName 10.200.114.67
-
-
-#Used to cleast the trusthosts on the local computer. 
-#Trusted hosts are used when HTTPS is not configured for remote connections. 
-clear-Item wsman:localhost\client\trustedhosts -Force
-get-Item wsman:localhost\client\trustedhosts
-winrm set winrm/config/client '@{TrustedHosts="10.200.114.67"}'
+#setup credentials for the session
 $cred = Get-Credential
-$cimses = New-CimSession -ComputerName 10.200.114.67 $cred 
-#if you get access denied make sure LocalAccountTokenFilterPolicy is enabled on the server
-
-$lanmanserver = Get-CimInstance -CimSession $cimses win32_service | Where-Object Name -eq "lanmanserver" 
-$lanmanserver | get-member
-Invoke-CimMethod -CimSession $cimses -InputObject $lanmanserver -methodname ChangeStartmode -Arguments @{startmode='automatic'}
-Invoke-CimMethod -CimSession $cimses -InputObject $lanmanserver -methodname StartService 
+$cimsession = New-CimSession -ComputerName 10.200.114.67 $cred 
+#If you get access denied make sure LocalAccountTokenFilterPolicy is enabled on the server
 
 
-Get-NetFirewallRule -CimSession $cimses -PolicyStore localhost | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} 
-Get-NetFirewallRule -CimSession $cimses -PolicyStore ActiveStore | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} 
-Get-NetFirewallRule -CimSession $cimses -PolicyStore localhost | Where-Object {$_.displayname -eq 'Windows Remote Management (HTTP-In)'}
-Get-NetFirewallRule -CimSession $cimses -PolicyStore ActiveStore | Where-Object {$_.displayname -eq 'Windows Remote Management (HTTP-In)'} 
-Get-NetFirewallRule -CimSession $cimses -PolicyStore localhost | Where-Object {$_.displayname -eq 'TCP 5985 ( WinRM - Required by AWS )'}
-Get-NetFirewallRule -CimSession $cimses -PolicyStore ActiveStore | Where-Object {$_.displayname -eq 'TCP 5985 ( WinRM - Required by AWS )'}
+#Get Server service object from remote server 
+$lanmanserver = Get-CimInstance -CimSession $cimsession win32_service | Where-Object Name -eq "lanmanserver" 
+#Set Server serice to start automatically on the remote computer
+Invoke-CimMethod -CimSession $cimsession -InputObject $lanmanserver -methodname ChangeStartmode -Arguments @{startmode='automatic'}
+#Start the server service on the remote computer
+Invoke-CimMethod -CimSession $cimsession -InputObject $lanmanserver -methodname StartService 
 
+<#
+Enable Port 445 on the firewall
+Using PolicyStore -localhost this will make the change on the local GPO firewall setting. 
+This setting can be found via gpedit.msc > Computer Configuration > Windows Settings > Security Settings > Windows Defender Firewall
+The rule already exists on the UVM and just needs to be enabled. 
+#>
+Set-NetFirewallRule -CimSession $cimsession -PolicyStore localhost -DisplayName 'TCP 445( SMB )' -Enabled True 
 
-Set-NetFirewallRule -CimSession $cimses -PolicyStore localhost -DisplayName 'TCP 445( SMB )' -Enabled True 
-Get-NetFirewallRule -CimSession $cimses -PolicyStore localhost | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} 
-Get-NetFirewallRule -CimSession $cimses -PolicyStore ActiveStore | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} 
-
-
-Invoke-CimMethod -CimSession $cimses -ClassName Win32_Process -MethodName "Create" -Arguments @{
+#after the rule is enabled to Local GPO has to be applied to update the new firewall rule in the PolicyStore -ActiveStore
+Invoke-CimMethod -CimSession $cimsession -ClassName Win32_Process -MethodName "Create" -Arguments @{
   CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
 }
+
+
