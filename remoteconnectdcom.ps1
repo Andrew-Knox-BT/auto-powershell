@@ -6,7 +6,7 @@ The below example is creating a hash table for the session connection where the 
 
 
 $SessionArgs = @{
-    ComputerName  = 'ServerB'  
+    ComputerName  = '10.200.114.165'  
     Credential    = Get-Credential
     SessionOption = New-CimSessionOption -Protocol Dcom
 }
@@ -15,7 +15,17 @@ $MethodArgs = @{
     MethodName    = 'Create'
     CimSession    = New-CimSession @SessionArgs
     Arguments     = @{
+        CommandLine = "Start-service lanmanserver"
+    }
+}
+<#
+$MethodArgs = @{
+    ClassName     = 'Win32_Process'
+    MethodName    = 'Create'
+    CimSession    = New-CimSession @SessionArgs
+    Arguments     = @{
         CommandLine = "powershell Start-Process powershell -ArgumentList 'Enable-PSRemoting -Force'"
     }
 }
+#>
 Invoke-CimMethod @MethodArgs

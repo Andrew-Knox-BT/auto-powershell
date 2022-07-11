@@ -4,7 +4,7 @@ clear-Item wsman:localhost\client\trustedhosts -Force
 get-Item wsman:localhost\client\trustedhosts
 winrm set winrm/config/client '@{TrustedHosts="10.200.114.67"}'
 $cred = Get-Credential
-$cimses = New-CimSession -ComputerName 10.200.114.67 $cred 
+$cimses = New-CimSession -ComputerName 10.200.114.165 $cred 
 #if you get access denied make sure LocalAccountTokenFilterPolicy is enabled on the server
 
 $lanmanserver = Get-CimInstance -CimSession $cimses win32_service | Where-Object Name -eq "lanmanserver" 
