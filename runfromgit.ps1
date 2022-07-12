@@ -1,2 +1,3 @@
-$ScriptFromGitHub = Invoke-WebRequest https://raw.githubusercontent.com/tomarbuthnot/Run-PowerShell-Directly-From-GitHub/master/Run-FromGitHub-SamplePowerShell.ps1
+$ScriptFromGitHub = Invoke-WebRequest https://github.com/Andrew-Knox-BT/auto-powershell/blob/main/UVMRunLocal.ps1
 Invoke-Expression $($ScriptFromGitHub.Content)
+
