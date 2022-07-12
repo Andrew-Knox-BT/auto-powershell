@@ -55,5 +55,5 @@ Invoke-Command -ComputerName ak-uvm221.red.local -SessionName
 
 Start-Service | Get-Member
 
-Invoke-WSManAction -Action startservice -ResourceURI \\wmi\cimv2\win32_service -SelectorSet @{name="spooler"}  -Authentication default
+Invoke-WSManAction -Action startservice -ResourceURI wmicimv2/win32_service -SelectorSet @{name="spooler"}  -Authentication default
 Invoke-WSManAction -Action startservice -ResourceURI wmicimv2/win32_service -SelectorSet @{name="server"} -ComputerName 10.200.114.67 -Authentication default
