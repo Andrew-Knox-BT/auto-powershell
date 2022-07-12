@@ -1,11 +1,10 @@
 #Create Firewall rule to open port 5985 for WIN RM
 #This will create the firewall rule in the local gpo
-
-#Add a check that is the rule exists skip this step
+#TODO - Add a check that is the rule exists skip this step
 New-NetFirewallRule -PolicyStore localhost -DisplayName "Escalation Automation - Windows Remote Management (HTTP-In)" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow -Profile Public -Enabled True -RemoteAddress Any -LocalAddress Any -RemotePort Any 
 
 
-#If previous rule exists check the activestore to see if the rule exists and that it's enabled. If so skip the gpupdate. 
+#TODO - If previous rule exists check the activestore to see if the rule exists and that it's enabled. If so skip the gpupdate. 
 
 Get-NetFirewallRule  -PolicyStore localhost | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
 Get-NetFirewallRule  -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
@@ -21,4 +20,6 @@ Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
   CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
 }
 
+Get-NetFirewallRule  -PolicyStore localhost | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
+Get-NetFirewallRule  -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
 
