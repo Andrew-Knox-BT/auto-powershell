@@ -20,4 +20,7 @@ Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
   CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
 }
 
+Write-Host "Press any key to continue..."
+$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
 Set-Itemproperty -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\' -Name 'LocalAccountTokenFilterPolicy' -Value 1
