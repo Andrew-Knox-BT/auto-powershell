@@ -6,7 +6,9 @@ New-NetFirewallRule -PolicyStore localhost -DisplayName "Escalation Automation -
 
 #TODO - If previous rule exists check the activestore to see if the rule exists and that it's enabled. If so skip the gpupdate. 
 
+write-host "Localhost"
 Get-NetFirewallRule  -PolicyStore localhost | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
+write-host "ActiveStore"
 Get-NetFirewallRule  -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
 
 <#
@@ -20,6 +22,8 @@ Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
   CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
 }
 
+write-host "Localhost"
 Get-NetFirewallRule  -PolicyStore localhost | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
+write-host "ActiveStore"
 Get-NetFirewallRule  -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'} | Format-List DisplayName, Enabled
 
