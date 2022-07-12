@@ -21,6 +21,9 @@ $cimsession = New-CimSession -ComputerName 10.200.114.165 $cred
 
 
 
+#Noticed on new UVM the server service is already running out of the box. 
+
+#Add a check here to see if the server service is already running if so skip this step
 
 #Get Server service object from remote server 
 $lanmanserver = Get-CimInstance -CimSession $cimsession win32_service | Where-Object Name -eq "lanmanserver" 
@@ -28,6 +31,11 @@ $lanmanserver = Get-CimInstance -CimSession $cimsession win32_service | Where-Ob
 Invoke-CimMethod -CimSession $cimsession -InputObject $lanmanserver -methodname ChangeStartmode -Arguments @{startmode='automatic'}
 #Start the server service on the remote computer
 Invoke-CimMethod -CimSession $cimsession -InputObject $lanmanserver -methodname StartService 
+
+#see status of firewall rule
+Get-NetFirewallRule -CimSession $cimses -PolicyStore localhost | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} | Format-List DisplayName, Enabled
+Get-NetFirewallRule -CimSession $cimses -PolicyStore ActiveStore | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} | Format-List DisplayName, Enabled
+
 
 <#
 Enable Port 445 on the firewall
@@ -37,9 +45,7 @@ The rule already exists on the UVM and just needs to be enabled.
 #>
 Set-NetFirewallRule -CimSession $cimsession -PolicyStore localhost -DisplayName 'TCP 445( SMB )' -Enabled True 
 
-#see status of firewall rule
-Get-NetFirewallRule -CimSession $cimses -PolicyStore localhost | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} | Format-List DisplayName, Enabled
-Get-NetFirewallRule -CimSession $cimses -PolicyStore ActiveStore | Where-Object {$_.displayname -eq 'TCP 445( SMB )'} | Format-List DisplayName, Enabled
+
 
 
 #after the rule is enabled to Local GPO has to be applied to update the new firewall rule in the PolicyStore -ActiveStore
