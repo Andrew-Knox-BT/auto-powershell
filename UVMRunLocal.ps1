@@ -15,11 +15,14 @@ Remove-NetFirewallRule -PolicyStore localhost | Where-Object {$_.displayname -li
 Remove-NetFirewallRule -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'}
 #>
 
+<#
 #After the gpo is updated need to run gpupdate to apply the new changes. 
 Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
   CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
 } | Out-Null
+#>
 
+Start-Process gpupdate.exe /force -Wait
 
 
 Set-Itemproperty -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\' -Name 'LocalAccountTokenFilterPolicy' -Value 1
