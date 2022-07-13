@@ -22,6 +22,9 @@ Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
 } | Out-Null
 #>
 
+
+
+
 Start-Process gpupdate.exe /force -Wait
 
 
