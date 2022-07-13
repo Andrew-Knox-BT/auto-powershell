@@ -22,8 +22,14 @@ Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
 } | Out-Null
 #>
 
+$gpo = {
+  Computer
+  SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  LocalAccountTokenFilterPolicy
+  DWORD:1
+  }
 
-
+  lgpo.exe /t $gpo
 
 Start-Process gpupdate.exe /force -Wait
 
