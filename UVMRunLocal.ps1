@@ -18,9 +18,8 @@ Remove-NetFirewallRule -PolicyStore ActiveStore | Where-Object {$_.displayname -
 #After the gpo is updated need to run gpupdate to apply the new changes. 
 Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
   CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
-}
+} | Out-Null
 
-Write-Host "Press any key to continue..."
-$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
 
 Set-Itemproperty -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\' -Name 'LocalAccountTokenFilterPolicy' -Value 1

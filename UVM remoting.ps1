@@ -32,3 +32,5 @@ Invoke-CimMethod -CimSession $cimses -ClassName Win32_Process -MethodName "Creat
 
 Invoke-GPUpdate -Computer 10.200.114.67
 
+Write-Host "Press any key to continue..."
+$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
