@@ -22,16 +22,10 @@ Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
 } | Out-Null
 #>
 
-$gpo = {
-  Computer
-  SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
-  LocalAccountTokenFilterPolicy
-  DWORD:1
-  }
+$downloadgpo = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/gpo.txt'
+$downloadLGPO = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/LGPO.exe'
+Invoke-WebRequest -UseBasicParsing -Uri $downloadgpo -OutFile .\gpo.txt 
+Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 
-  lgpo.exe /t $gpo
+&.\lgpo.exe /t .\gpo.txt
 
-Start-Process gpupdate.exe /force -Wait
-
-
-Set-Itemproperty -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\' -Name 'LocalAccountTokenFilterPolicy' -Value 1
