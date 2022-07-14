@@ -15,12 +15,6 @@ Remove-NetFirewallRule -PolicyStore localhost | Where-Object {$_.displayname -li
 Remove-NetFirewallRule -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'}
 #>
 
-<#
-#After the gpo is updated need to run gpupdate to apply the new changes. 
-Invoke-CimMethod -ClassName Win32_Process -MethodName "Create" -Arguments @{
-  CommandLine = 'gpupdate.exe'; CurrentDirectory = "C:\windows\system32"
-} | Out-Null
-#>
 
 $downloadgpo = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/gpo.txt'
 $downloadLGPO = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/LGPO.exe'
