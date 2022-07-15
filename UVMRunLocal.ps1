@@ -1,6 +1,4 @@
 #Create Firewall rule to open port 5985 for WIN RM
-#This will create the firewall rule in the local gpo
-
 #TODO - Add a check that is the rule exists skip this step
 New-NetFirewallRule -PolicyStore localhost -DisplayName "Escalation Automation - Windows Remote Management (HTTP-In)" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow -Profile Public -Enabled True -RemoteAddress Any -LocalAddress Any -RemotePort Any 
 
