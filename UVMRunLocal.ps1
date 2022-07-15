@@ -20,6 +20,6 @@ $downloadgpo = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell
 $downloadLGPO = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/LGPO.exe'
 Invoke-WebRequest -UseBasicParsing -Uri $downloadgpo -OutFile .\gpo.txt 
 Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
-
-&$PSScriptRoot\lgpo.exe /t $PSScriptRoot\gpo.txt
+$currentdir = Get-Location
+&$currentdir\lgpo.exe /t $currentdir\gpo.txt
 
