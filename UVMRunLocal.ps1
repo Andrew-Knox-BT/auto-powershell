@@ -21,5 +21,5 @@ $downloadLGPO = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershel
 Invoke-WebRequest -UseBasicParsing -Uri $downloadgpo -OutFile .\gpo.txt 
 Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 
-&$HOME\lgpo.exe /t $HOME\gpo.txt
+&$PSScriptRoot\lgpo.exe /t $PSScriptRoot\gpo.txt
 
