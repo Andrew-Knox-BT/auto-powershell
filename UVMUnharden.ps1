@@ -45,7 +45,7 @@ Set-DnsClientServerAddress -CimSession $cimsession -InterfaceAlias 'Ethernet0' -
 
 #Set DNS suffix for this connection and Set Use this connections DNS suffix in DNS registration
 #Curretly in lab the main domain is red.local
-set-dnsclient -CimSession $cimsession -InterfaceAlias 'Ethernet0' -ConnectionSpecificSuffix 'uvm.com' -UseSuffixWhenRegistering $true
+set-dnsclient -CimSession $cimsession -InterfaceAlias 'Ethernet0' -ConnectionSpecificSuffix 'uvm.lab' -UseSuffixWhenRegistering $true
 #With this setting it will use the DNS suffix specified in the DNS suffix for this connection box to regeister the machein in DNS
 
 #Run command to register the server in DNS
