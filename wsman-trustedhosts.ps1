@@ -10,7 +10,7 @@ clear-Item wsman:localhost\client\trustedhosts
 
 #get a current list of trusted hosts and then add to the current list
 $current=(get-item WSMan:\localhost\Client\TrustedHosts).value
-$current+="10.200.114.165"
+$current+="10.200.114.165,10.200.114.105"
 set-item WSMan:\localhost\Client\TrustedHosts –value $current -force
 
 
