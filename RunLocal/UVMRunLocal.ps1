@@ -21,7 +21,7 @@ Remove-NetFirewallRule -PolicyStore ActiveStore | Where-Object {$_.displayname -
 
 
 $downloadgpo = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/gpo.txt'
-$downloadLGPO = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/LGPO.exe'
+$downloadLGPO = 'https://github.com/Andrew-Knox-BT/auto-powershell/blob/main/External%20Files/LGPO.exe?raw=true'
 Invoke-WebRequest -UseBasicParsing -Uri $downloadgpo -OutFile .\gpo.txt 
 Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 $currentdir = Get-Location
