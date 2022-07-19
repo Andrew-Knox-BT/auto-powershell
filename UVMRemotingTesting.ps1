@@ -57,3 +57,8 @@ Start-Service | Get-Member
 
 Invoke-WSManAction -Action startservice -ResourceURI wmicimv2/win32_service -SelectorSet @{name="spooler"}  -Authentication default
 Invoke-WSManAction -Action startservice -ResourceURI wmicimv2/win32_service -SelectorSet @{name="server"} -ComputerName 10.200.114.67 -Authentication default
+
+
+$test = Get-Location
+#$test | format-table $test
+
