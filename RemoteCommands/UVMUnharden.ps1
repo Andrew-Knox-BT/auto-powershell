@@ -1,8 +1,8 @@
 #Main file to run against a UVM to unharden the firewall and start needed services to allow outside access into the UVM for copying files and running tests 
 get-Item wsman:localhost\client\trustedhosts
 #setup credentials for the session
-$cred = Get-Secret -Name UVMUsernameAndPassword
-$cimsession = New-CimSession -ComputerName 10.200.114.165 $cred 
+$cred = Get-Secret -Name OldUVMUserandPassword
+$cimsession = New-CimSession -ComputerName 10.200.114.67 $cred 
 #If you get access denied make sure LocalAccountTokenFilterPolicy is enabled on the server
 
 #Turn off LocalAccountTokenFiltering in GPO - Computer Configuration > Administrative Settings > SCM Pass the hash > Apply UAC Restrictions

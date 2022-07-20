@@ -31,7 +31,7 @@ Get-SecretVault
 # Create a credential object.
 $secretcredential = Get-Credential
 # Create a new secret 
-Set-Secret -Name RedDomainAdmin -Secret $secretcredential -Vault AutomationSecrets
+Set-Secret -Name OldUVMUserandPassword -Secret $secretcredential -Vault AutomationSecrets
 
 #this will allow access the secret store. You will be prompted for the password you used when creating the secret store
 Unlock-SecretStore
