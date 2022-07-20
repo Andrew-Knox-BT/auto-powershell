@@ -2,6 +2,8 @@
 #A firewall rule will be created that will allow remote access through WinRM. 
 #The local GPO will be updated to disable LocalAccountTokenFiltering so local admin accounts can be used remotely
 
+#First Check if the Server service is running. If not start the service. 
+Set-Service -Name LanmanServer -Status Running -StartupType Automatic
 
 
 #Create Firewall rule to open port 5985 for WIN RM
@@ -22,8 +24,10 @@ Remove-NetFirewallRule -PolicyStore ActiveStore | Where-Object {$_.displayname -
 
 $downloadgpo = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/ExternalFiles/gpo.txt'
 $downloadLGPO = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/ExternalFiles/LGPO.exe'
+
 Invoke-WebRequest -UseBasicParsing -Uri $downloadgpo -OutFile .\gpo.txt 
 Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 $currentdir = Get-Location
 &$currentdir\lgpo.exe /t $currentdir\gpo.txt
+
 
