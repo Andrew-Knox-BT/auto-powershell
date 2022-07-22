@@ -63,5 +63,3 @@ Unlock-SecretStore -Password $vaultpassword
 (Get-Secret -Name UVMUsernameAndPassword).GetNetworkCredential()| Select-Object UserName, Password
 
 
-
-Get-SecretStoreConfiguration

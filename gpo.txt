@@ -1,4 +1,0 @@
-Computer
-SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
-LocalAccountTokenFilterPolicy
-DWORD:1
