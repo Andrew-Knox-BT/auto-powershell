@@ -1,25 +1,28 @@
 #This is the first script to run on the UVM. 
-#A firewall rule will be created that will allow remote access through WinRM. 
-#The local GPO will be updated to disable LocalAccountTokenFiltering so local admin accounts can be used remotely
 
-#First Check if the Server service is running. If not start the service. 
-Set-Service -Name LanmanServer -Status Running -StartupType Automatic
-
-
-#Create Firewall rule to open port 5985 for WIN RM
-#TODO - Add a check that is the rule exists skip this step
-New-NetFirewallRule -PolicyStore localhost -DisplayName "Escalation Automation - Windows Remote Management (HTTP-In)" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow -Profile Public -Enabled True -RemoteAddress Any -LocalAddress Any -RemotePort Any 
+$win10 = "Microsoft Windows 10 Enterprise"
+$win2012r2 = "Microsoft Windows SErver 2012 R2 Standard"
+$win2016 = "Microsoft Windows Server 2016 Standard"
+$win2019 = "Microsoft Windows SErver 2012 R2 Standard"
+$win2022 = ""
 
 
-#TODO - If previous rule exists check the activestore to see if the rule exists and that it's enabled. If so skip the gpupdate. 
+$winversion = (Get-CimInstance Win32_OperatingSystem).caption
 
+if ((get-service -name lanmanserver).status -eq 'Stopped' ) {
+    Set-Service -Name LanmanServer -Status Running -StartupType Automatic
+}
 
+if ((Get-NetFirewallRule -PolicyStore ActiveStore).PolicyStoreSourceType -eq 'GroupPolicy') {
+    #For 2016 UVMs - Firewall rules are managed with Local Group Policy
+    #-PolicyStore localhost will create the rule in the GPO - gpupdate needs to run for the rule to take effect
+    New-NetFirewallRule -PolicyStore localhost -DisplayName "Escalation Automation - Windows Remote Management (HTTP-In)" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow -Profile Public -Enabled True -RemoteAddress Any -LocalAddress Any -RemotePort Any 
+}
+else {
+    #For 2012R2 UVMs - Firewall Rules are managed with Windows Firewall
+    New-NetFirewallRule -DisplayName "Escalation Automation - Windows Remote Management (HTTP-In)" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow -Profile Public -Enabled True -RemoteAddress Any -LocalAddress Any -RemotePort Any 
+}
 
-<#
-#Only use when firewall rules need to be removed and cleaned up. 
-Remove-NetFirewallRule -PolicyStore localhost | Where-Object {$_.displayname -like 'Escalation Automation*'}
-Remove-NetFirewallRule -PolicyStore ActiveStore | Where-Object {$_.displayname -like 'Escalation Automation*'}
-#>
 
 
 $downloadgpo = 'https://raw.githubusercontent.com/Andrew-Knox-BT/auto-powershell/main/ExternalFiles/gpo.txt'
