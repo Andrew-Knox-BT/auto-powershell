@@ -33,5 +33,5 @@ set-dnsclient -InterfaceAlias 'Ethernet0' -ConnectionSpecificSuffix 'uvm.lab' -U
 #With this setting it will use the DNS suffix specified in the DNS suffix for this connection box to regeister the machein in DNS
 
 #Run command to register the server in DNS
-Register-DnsClient -CimSession $cimsession
+Register-DnsClient 
 
