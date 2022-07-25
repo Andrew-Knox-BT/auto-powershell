@@ -23,4 +23,15 @@ Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 $currentdir = Get-Location
 &$currentdir\lgpo.exe /t $currentdir\gpo.txt
 
+#To make the servers easier to manage they need to be added to DNS
+#Set DNS Address. Currently in lab the DNS server is 10.200.114.105
+Set-DnsClientServerAddress -InterfaceAlias 'Ethernet0' -ServerAddresses ("10.200.114.105")
+
+#Set DNS suffix for this connection and Set Use this connections DNS suffix in DNS registration
+#Curretly in lab the main domain is red.local
+set-dnsclient -InterfaceAlias 'Ethernet0' -ConnectionSpecificSuffix 'uvm.lab' -UseSuffixWhenRegistering $true
+#With this setting it will use the DNS suffix specified in the DNS suffix for this connection box to regeister the machein in DNS
+
+#Run command to register the server in DNS
+Register-DnsClient -CimSession $cimsession
 

@@ -4,24 +4,17 @@
 get-Item wsman:localhost\client\trustedhosts
 
 #Used to clear the trusthosts on the local computer. 
-clear-Item wsman:localhost\client\trustedhosts
+clear-Item wsman:localhost\client\trustedhosts -Force
  
-$object
-foreach ($ipaddress in $object) {
-    $current=(get-item WSMan:\localhost\Client\TrustedHosts).value
-    $current+=$ipaddress.IPAddress
-    set-item WSMan:\localhost\Client\TrustedHosts –value $current -force
+
+foreach ($whatever in $object) {
+   
+    set-item WSMan:\localhost\Client\TrustedHosts –value $whatever.IPAddress.ToString() -Concatenate -force
      
 }
 get-Item wsman:localhost\client\trustedhosts
 
-
-#get a current list of trusted hosts and then add to the current list
-$current=(get-item WSMan:\localhost\Client\TrustedHosts).value
-$current+=",10.200.114.67"
-set-item WSMan:\localhost\Client\TrustedHosts –value $current -force
-
-
+set-item WSMan:\localhost\Client\TrustedHosts –value 10.200.114.105 -Concatenate -force
 #another method using a list from a txt file
 Get-Content "C:\ServerList.txt"
 machineA,machineB,machineC,machineD
