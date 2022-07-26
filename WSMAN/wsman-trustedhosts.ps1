@@ -5,11 +5,11 @@ get-Item wsman:localhost\client\trustedhosts
 
 #Used to clear the trusthosts on the local computer. 
 clear-Item wsman:localhost\client\trustedhosts -Force
- 
 
-foreach ($whatever in $object) {
+
+foreach ($uvmip in $object) {
    
-    set-item WSMan:\localhost\Client\TrustedHosts –value $whatever.IPAddress.ToString() -Concatenate -force
+    set-item WSMan:\localhost\Client\TrustedHosts –value $uvmip.IPAddress.ToString() -Concatenate -force
      
 }
 get-Item wsman:localhost\client\trustedhosts
