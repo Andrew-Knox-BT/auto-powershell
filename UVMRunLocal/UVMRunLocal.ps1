@@ -1,8 +1,9 @@
 #This is the first script to run on the UVM. 
 
-$EAFRWinRM5985 = 'Escalation Automation - Windows Remote Management (HTTP-In)'
+
 
 #This will enable WinRM access to the UVMs
+$EAFRWinRM5985 = 'Escalation Automation - Windows Remote Management (HTTP-In)'
 if ((Get-NetFirewallRule -PolicyStore ActiveStore).PolicyStoreSourceType -eq 'GroupPolicy') {
     #For 2016 UVMs - Firewall rules are managed with Local Group Policy
     # -PolicyStore localhost will create the rule in the GPO 
@@ -22,11 +23,7 @@ Invoke-WebRequest -UseBasicParsing -Uri $downloadgpo -OutFile .\gpo.txt
 Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 $currentdir = Get-Location
 &$currentdir\lgpo.exe /t $currentdir\gpo.txt
-$test = Get-NetIPAddress | Select-Object -ExpandProperty IPv4Address | gm
-Get-NetIPAddress | gm
-$test | gm
 
-$test[2] | gm
 
 $allips = Get-NetIPAddress | Select-Object -ExpandProperty IPv4Address
 foreach ($ip in $allips) {
@@ -44,7 +41,7 @@ foreach ($ip in $allips) {
 Set-DnsClientServerAddress -InterfaceAlias $interfacealias -ServerAddresses ("10.200.114.105")
 
 #Set DNS suffix for this connection and Set Use this connections DNS suffix in DNS registration
-#Curretly in lab the main domain is red.local
+#Curretly in lab the main domain for UVM's is - uvm.lab
 set-dnsclient -InterfaceAlias $interfacealias -ConnectionSpecificSuffix 'uvm.lab' -UseSuffixWhenRegistering $true
 #With this setting it will use the DNS suffix specified in the DNS suffix for this connection box to regeister the machein in DNS
 
