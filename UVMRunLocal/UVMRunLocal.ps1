@@ -24,6 +24,9 @@ Invoke-WebRequest -UseBasicParsing -Uri $downloadLGPO -OutFile .\LGPO.exe
 $currentdir = Get-Location
 &$currentdir\lgpo.exe /t $currentdir\gpo.txt
 
+remove-item $currentdir\lgpo.exe
+remove-item $currentdir\gpo.txt
+
 
 $allips = Get-NetIPAddress | Select-Object -ExpandProperty IPv4Address
 foreach ($ip in $allips) {
